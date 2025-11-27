@@ -13,16 +13,16 @@
 
     <div class="relative inline-block text-left">
       <button id="menuToggle" class="text-white">&#9776; Menú</button>
-            <nav id="sideMenu" class="hidden absolute right-4 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-        <ul class="py-1 text-gray-800">
+            <nav id="sideMenu" class="hidden absolute right-0 mt-2 w-40 origin-top-right rounded-lg bg-white shadow-xl border border-gray-100 z-50">
+        <ul class="text-gray-800 divide-y divide-gray-100">
           <li>
-            <button onclick="showSection('resumenPanel')" class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Resumen</button>
+            <button onclick="showSection('resumenPanel')" class="w-full text-left px-3 py-1.5 text-sm font-medium hover:bg-gray-50">Resumen</button>
           </li>
           <li>
-            <button onclick="showSection('mainPanel')" class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Historial de Sensores</button>
+            <button onclick="showSection('mainPanel')" class="w-full text-left px-3 py-1.5 text-sm font-medium hover:bg-gray-50">Historial de Sensores</button>
           </li>
           <li>
-            <button onclick="showSection('historyPanel')" class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Comparativa</button>
+            <button onclick="showSection('historyPanel')" class="w-full text-left px-3 py-1.5 text-sm font-medium hover:bg-gray-50">Comparativa</button>
           </li>
         </ul>
       </nav>
@@ -40,10 +40,10 @@
     </div>
 
     <div class="flex flex-wrap justify-center gap-6">
-      <div class="w-full md:w-1/2">
+      <div class="w-full md:w-1/2 max-w-xl">
         <canvas id="sensorChart" class="bg-white p-4 rounded shadow w-full h-96"></canvas>
       </div>
-      <div class="w-full md:w-1/2 overflow-x-auto">
+      <div class="w-full md:w-1/2 max-w-xl overflow-x-auto">
         <table class="w-full bg-white rounded shadow text-sm">
           <thead>
             <tr class="bg-gray-200">
@@ -57,59 +57,67 @@
     </div>
   </main>
 
-      <div id="resumenPanel" class="hidden p-4">
+      <div id="resumenPanel" class="p-6">
       <h2 class="text-xl font-bold mb-4 text-center">Resumen de Sensores</h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full bg-white shadow-md rounded">
-          <thead class="bg-gray-200">
-            <tr>
-              <th class="border px-4 py-2">Sensor</th>
-              <th class="border px-4 py-2">Valor</th>
-              <th class="border px-4 py-2">Fecha y Hora</th>
-            </tr>
-          </thead>
-          <tbody id="tbodySensores">
-                      </tbody>
-        </table>
-      </div>
-
-      <h2 class="text-xl font-bold mt-8 mb-4 text-center">Estado del Sistema</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-        <div class="bg-white p-4 rounded shadow">
-          <div class="text-sm text-gray-500">Voltaje Panel</div>
-         <div class="text-xl font-bold" id="voltajePanel">-- V</div>
-       </div>
-       <div class="bg-white p-4 rounded shadow">
-         <div class="text-sm text-gray-500">Voltaje Batería</div>
-          <div class="text-xl font-bold" id="voltajeBateria">-- V</div>
-        </div>
-                <div class="bg-white p-4 rounded shadow relative overflow-hidden">
-            <div class="text-sm text-gray-500 z-10 relative">% Batería</div>
-            <div class="text-xl font-bold z-10 relative" id="porcentajeBateria">--%</div>
-            <div id="bateriaFill" class="absolute inset-0 transition-all duration-500 ease-out" style="width:0; opacity:0.6;"></div>
+      
+      <div class="flex justify-center mb-8">
+        <div class="w-full max-w-2xl overflow-x-auto bg-white shadow-md rounded">
+          <table class="min-w-full text-sm">
+            <thead class="bg-gray-200">
+              <tr>
+                <th class="border px-4 py-2 text-left">Sensor</th>
+                <th class="border px-4 py-2 text-left">Valor</th>
+                <th class="border px-4 py-2 text-left">Fecha y Hora</th>
+              </tr>
+            </thead>
+            <tbody id="tbodySensores">
+                          </tbody>
+          </table>
         </div>
-                <div class="bg-white p-4 rounded shadow">
-            <div class="text-sm text-gray-500 flex items-center justify-center">
-                <span id="panelIcon" class="text-2xl mr-2 transition-colors duration-500">☀️</span>
-                % Panel Solar
-            </div>
-            <div class="text-xl font-bold" id="porcentajePanel">--%</div>
+      </div>
+            <h2 class="text-xl font-bold mt-8 mb-4 text-center">Estado del Sistema</h2>
+      
+      <div class="flex justify-center">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-2xl text-center">
+            
+                    <div class="bg-white p-3 rounded shadow">
+            <div class="text-xs text-gray-500">Voltaje Panel</div>
+            <div class="text-xl font-bold" id="voltajePanel">-- V</div>
+          </div>
+          
+                    <div class="bg-white p-3 rounded shadow">
+            <div class="text-xs text-gray-500">Voltaje Batería</div>
+            <div class="text-xl font-bold" id="voltajeBateria">-- V</div>
+          </div>
+          
+                    <div class="bg-white p-3 rounded shadow relative overflow-hidden">
+              <div class="text-xs text-gray-500 z-10 relative">% Batería</div>
+              <div class="text-xl font-bold z-10 relative" id="porcentajeBateria">--%</div>
+              <div id="bateriaFill" class="absolute inset-0 transition-all duration-500 ease-out" style="width:0; opacity:0.6;"></div>
+          </div>
+          
+                    <div class="bg-white p-3 rounded shadow">
+              <div class="text-xs text-gray-500 flex items-center justify-center">
+                  <span id="panelIcon" class="text-xl mr-2 transition-colors duration-500">☀️</span>
+                  % Panel Solar
+              </div>
+              <div class="text-xl font-bold" id="porcentajePanel">--%</div>
+          </div>
         </div>
-     </div>
-    </div>
+      </div>
+          </div>
 
         <main id="historyPanel" class="p-6 hidden">
       <h2 class="text-center text-xl font-semibold mb-4">
         Comparativa de Sensores
       </h2>
 
-      <div class="flex flex-wrap justify-center gap-6">
-        <div class="w-full md:w-3/4">
+      <div class="flex justify-center">
+        <div class="w-full max-w-4xl">
           <canvas id="compareChart" class="bg-white p-4 rounded shadow w-full h-96"></canvas>
-        </div>
-      </div>
-
-      <div class="flex justify-end mt-4">
+        </div>
+      </div>
+            <div class="flex justify-end mt-4 max-w-4xl mx-auto">
         <button id="downloadBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
           Descargar Imagen
         </button>
