@@ -4,11 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Techo Verde - Monitor de Sensores</title>
+    <link rel="icon" type="image/png" href="../X/tv.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
-<body class="bg-gray-50 min-h-screen font-sans font-['Inter']">
+<body class="bg-gray-50 min-h-screen font-sans font-['Inter'] flex flex-col">
 
     <header class="bg-green-700 text-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
         <h1 class="text-3xl font-extrabold tracking-tight">Techo Verde</h1>
@@ -35,8 +36,7 @@
         </div>
     </header>
 
-    <div id="resumenPanel" class="p-6">
-        <h2 class="text-2xl font-bold mb-6 text-center text-green-800">Estado General del Techo Verde</h2>
+    <div id="resumenPanel" class="p-6 flex-grow"> <h2 class="text-2xl font-bold mb-6 text-center text-green-800">Estado General del Techo Verde</h2>
         
         <h3 class="text-xl font-semibold mb-4 text-center text-gray-700">Sistema Energético</h3>
         <div class="flex justify-center mb-10">
@@ -76,32 +76,49 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 w-full max-w-5xl text-center">
 
                 <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-red-500 hover:shadow-xl transition duration-300">
-                    <div class="text-sm text-gray-500">AHT Temperatura</div>
+                    <div class="text-sm text-gray-500 flex items-center justify-center">
+                        <span id="ahtTempIcon" class="text-xl mr-2">🌡️</span> AHT Temperatura
+                    </div>
                     <div class="text-2xl font-extrabold mt-1" id="ahtTemp">-- °C</div>
                 </div>
                 
                 <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-cyan-500 hover:shadow-xl transition duration-300">
-                    <div class="text-sm text-gray-500">AHT Humedad</div>
+                    <div class="text-sm text-gray-500 flex items-center justify-center">
+                        <span id="ahtHumIcon" class="text-xl mr-2">💧</span> AHT Humedad
+                    </div>
                     <div class="text-2xl font-extrabold mt-1" id="ahtHum">-- %</div>
                 </div>
 
                 <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-red-700 hover:shadow-xl transition duration-300">
-                    <div class="text-sm text-gray-500">BMP Temperatura</div>
+                    <div class="text-sm text-gray-500 flex items-center justify-center">
+                        <span id="bmpTempIcon" class="text-xl mr-2">🌡️</span> BMP Temperatura
+                    </div>
                     <div class="text-2xl font-extrabold mt-1" id="bmpTemp">-- °C</div>
                 </div>
 
                 <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-purple-500 hover:shadow-xl transition duration-300">
-                    <div class="text-sm text-gray-500">Presión Atmosférica</div>
+                    <div class="text-sm text-gray-500 flex items-center justify-center">
+                        <span id="presionIcon" class="text-xl mr-2">🌬️</span> Presión Atmosférica
+                    </div>
                     <div class="text-2xl font-extrabold mt-1" id="presion">-- hPa</div>
                 </div>
                 
                 <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-yellow-600 hover:shadow-xl transition duration-300">
-                    <div class="text-sm text-gray-500">Nivel de Luz</div>
+                    <div class="text-sm text-gray-500 flex items-center justify-center">
+                        <span id="luzIcon" class="text-xl mr-2">💡</span> Nivel de Luz
+                    </div>
                     <div class="text-2xl font-extrabold mt-1" id="luz">--</div>
                 </div>
             </div>
         </div>
         <h3 class="text-xl font-semibold mb-4 text-center text-gray-700">Últimas Lecturas de Sensores de Suelo</h3>
+        <div class="flex justify-center mb-4">
+            <div class="w-full max-w-4xl flex justify-end">
+                <button onclick="openGoogleSheet()" class="bg-green-600 text-white px-4 py-2 text-sm rounded-lg font-semibold hover:bg-green-700 transition duration-150 shadow-md">
+                    Abrir Google Sheet
+                </button>
+            </div>
+        </div>
         <div class="flex justify-center">
             <div class="w-full max-w-4xl overflow-hidden bg-white shadow-xl rounded-xl">
                 <table class="min-w-full text-sm">
@@ -119,7 +136,7 @@
         </div>
     </div>
 
-    <main id="mainPanel" class="p-6 hidden">
+    <main id="mainPanel" class="p-6 hidden flex-grow">
         <h2 class="text-center text-2xl font-bold mb-6 text-green-800">
             Historial del Sensor <span id="sensorLabel"></span>
         </h2>
@@ -151,7 +168,7 @@
         </div>
     </main>
 
-    <main id="historyPanel" class="p-6 hidden">
+    <main id="historyPanel" class="p-6 hidden flex-grow">
         <h2 class="text-center text-2xl font-bold mb-6 text-green-800">
             Comparativa de Sensores
         </h2>
@@ -168,6 +185,14 @@
             </button>
         </div>
     </main>
+
+    <footer class="bg-green-700 text-white p-4 mt-8 shadow-inner">
+        <div class="container mx-auto text-center text-sm">
+            <p>&copy; 2023 Techo Verde. Todos los derechos reservados.</p>
+            <p class="mt-2">Datos de monitoreo en tiempo real de tu proyecto ecológico.</p>
+        </div>
+    </footer>
+
 
     <script src="main.js"></script>
 </body>
