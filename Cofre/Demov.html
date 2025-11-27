@@ -112,31 +112,32 @@
             </div>
         </div>
         
-                <h3 class="text-xl font-semibold mb-4 text-center text-gray-700">Últimas Lecturas de Sensores de Suelo</h3>
-                    <div class="flex justify-center mb-4">
-                        <div class="w-full max-w-4xl flex justify-end">
-                            <button onclick="openGoogleSheet()" class="bg-green-600 text-white px-4 py-2 text-sm rounded-lg font-semibold hover:bg-green-700 transition duration-150 shadow-md">
-                                Abrir Google Sheet
-                            </button>
-                        </div>
-                    </div>
-                    <div class="flex justify-center">
-                        <div class="w-full max-w-4xl overflow-hidden bg-white shadow-xl rounded-xl">
-                            <table class="min-w-full text-sm">
-                                
-                                <thead class="bg-green-100 text-green-800">
-                                    <tr>
-                                        <th class="border-b-2 border-green-200 px-4 py-3 text-left w-3/12">Sensor</th>
-                                        <th class="border-b-2 border-green-200 px-4 py-3 text-left w-2/12">Valor</th>
-                                        <th class="border-b-2 border-green-200 px-4 py-3 text-left w-6/12">Fecha y Hora</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodySensores">
-                                    </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+        <div class="flex justify-center mb-4">
+            <div class="w-full max-w-4xl flex justify-between items-center">
+                <h3 class="text-xl font-semibold text-gray-700">Últimas Lecturas de Sensores de Suelo</h3>
+                <button onclick="openGoogleSheet()" class="bg-green-600 text-white px-4 py-2 text-sm rounded-lg font-semibold hover:bg-green-700 transition duration-150 shadow-md">
+                    Abrir Google Sheet
+                </button>
+            </div>
+        </div>
+        <div class="flex justify-center">
+            <div class="w-full max-w-4xl overflow-hidden bg-white shadow-xl rounded-xl">
+                <table class="min-w-full text-sm">
+                    
+                    <thead class="bg-green-100 text-green-800">
+                        <tr>
+                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-3/12">Sensor</th>
+                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-2/12">Valor</th>
+                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-6/12">Fecha y Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodySensores">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
     <main id="mainPanel" class="p-6 hidden flex-grow">
         <h2 class="text-center text-2xl font-bold mb-6 text-green-800">
             Historial del Sensor <span id="sensorLabel"></span>
