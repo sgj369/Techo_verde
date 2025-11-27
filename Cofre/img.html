@@ -3,54 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba de Carga de Imagen</title>
+    <title>Prueba de Tabla Compacta</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilo personalizado para simular los colores de los círculos (puntos de los sensores) */
+        .sensor-point {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-xl">
-        <h1 class="text-2xl font-bold mb-4 text-gray-800">Verificación de Carga de Imagen (Favicon)</h1>
-        
-        <p class="mb-4">Ruta probada: <code class="bg-gray-200 p-1 rounded">../X/tv.png</code></p>
-        
-        <div id="resultado" class="text-lg font-semibold p-4 rounded-lg transition duration-300">
-            Cargando...
+<body class="bg-gray-50 p-10 font-sans">
+
+    <div class="flex justify-center">
+        <div class="w-full max-w-4xl">
+            
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-700">Últimas Lecturas de Sensores de Suelo</h3>
+                <button class="bg-green-600 text-white px-4 py-2 text-sm rounded-lg font-semibold">
+                    Abrir Google Sheet
+                </button>
+            </div>
+            
+            <div class="overflow-hidden bg-white shadow-xl rounded-xl">
+                <table class="min-w-full text-sm">
+                    
+                    <thead class="bg-green-100 text-green-800">
+                        <tr>
+                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-3/12">Sensor</th>
+                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-2/12">Valor</th>
+                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-6/12">Fecha y Hora</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr class="hover:bg-green-50 transition duration-100">
+                            <td class="border-b border-gray-100 px-4 py-1 flex items-center">
+                                <span class="sensor-point" style="background-color:#10b981;"></span>
+                                Sensor1
+                            </td>
+                            <td class="border-b border-gray-100 px-4 py-1 font-semibold">26.06</td>
+                            <td class="border-b border-gray-100 px-4 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
+                        </tr>
+                        <tr class="hover:bg-green-50 transition duration-100">
+                            <td class="border-b border-gray-100 px-4 py-1 flex items-center">
+                                <span class="sensor-point" style="background-color:#3b82f6;"></span>
+                                Sensor2
+                            </td>
+                            <td class="border-b border-gray-100 px-4 py-1 font-semibold">26.69</td>
+                            <td class="border-b border-gray-100 px-4 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
+                        </tr>
+                        <tr class="hover:bg-green-50 transition duration-100">
+                            <td class="border-b border-gray-100 px-4 py-1 flex items-center">
+                                <span class="sensor-point" style="background-color:#f97316;"></span>
+                                Sensor3
+                            </td>
+                            <td class="border-b border-gray-100 px-4 py-1 font-semibold">27.81</td>
+                            <td class="border-b border-gray-100 px-4 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-        <h2 class="text-xl font-semibold mt-6 mb-3">Resultado de la Carga:</h2>
-        <img id="imagenPrueba" src="" alt="Imagen de Prueba" class="hidden max-w-full h-auto border border-gray-300 rounded-lg">
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // RUTA CORREGIDA AQUÍ: Eliminamos el ">"
-            const path = "../X/tv.png"; 
-            const resultadoDiv = document.getElementById('resultado');
-            const imagenElemento = document.getElementById('imagenPrueba');
-            
-            // Establece la ruta del archivo que estamos probando
-            imagenElemento.src = path;
-            
-            imagenElemento.onload = function() {
-                resultadoDiv.textContent = "✅ ¡ÉXITO! La imagen se cargó correctamente.";
-                resultadoDiv.classList.remove('bg-gray-200', 'text-gray-800');
-                resultadoDiv.classList.add('bg-green-100', 'text-green-700');
-                imagenElemento.classList.remove('hidden');
-                console.log("ÉXITO: Imagen cargada desde la ruta: " + path);
-            };
-
-            imagenElemento.onerror = function() {
-                resultadoDiv.textContent = "❌ ERROR: La imagen NO se pudo cargar. Revisa la ruta en el repositorio.";
-                resultadoDiv.classList.remove('bg-gray-200', 'text-gray-800');
-                resultadoDiv.classList.add('bg-red-100', 'text-red-700');
-                console.error("ERROR: Fallo al cargar la imagen desde la ruta: " + path);
-            };
-
-            if (imagenElemento.complete && imagenElemento.naturalWidth !== 0) {
-                 imagenElemento.onload();
-            } else if (imagenElemento.complete) {
-                imagenElemento.onerror();
-            }
-        });
-    </script>
 </body>
 </html>
