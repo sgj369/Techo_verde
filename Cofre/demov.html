@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Techo Verde - Monitor de Sensores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+<body class="bg-gray-50 min-h-screen font-sans font-['Inter']">
+
+    <header class="bg-green-700 text-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        <h1 class="text-3xl font-extrabold tracking-tight">Techo Verde</h1>
+
+        <div class="relative inline-block text-left">
+            <button id="menuToggle" class="text-white hover:bg-green-800 p-2 rounded-lg transition duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+            <nav id="sideMenu" class="hidden absolute right-0 mt-3 w-48 origin-top-right rounded-xl bg-white shadow-2xl border border-gray-100 z-50">
+                <ul class="text-gray-800 divide-y divide-gray-100 p-1">
+                    <li>
+                        <button onclick="showSection('resumenPanel')" class="w-full text-left px-4 py-2 text-sm font-semibold hover:bg-green-50 rounded-lg transition duration-100">Resumen</button>
+                    </li>
+                    <li>
+                        <button onclick="showSection('mainPanel')" class="w-full text-left px-4 py-2 text-sm font-semibold hover:bg-green-50 rounded-lg transition duration-100">Historial de Sensores</button>
+                    </li>
+                    <li>
+                        <button onclick="showSection('historyPanel')" class="w-full text-left px-4 py-2 text-sm font-semibold hover:bg-green-50 rounded-lg transition duration-100">Comparativa</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div id="resumenPanel" class="p-6">
+        <h2 class="text-2xl font-bold mb-6 text-center text-green-800">Estado General del Techo Verde</h2>
+        
+        <h3 class="text-xl font-semibold mb-4 text-center text-gray-700">Sistema Energético</h3>
+        <div class="flex justify-center mb-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl text-center">
+                
+                <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-green-500 hover:shadow-xl transition duration-300">
+                    <div class="text-sm text-gray-500">Voltaje Panel</div>
+                    <div class="text-2xl font-extrabold mt-1" id="voltajePanel">-- V</div>
+                </div>
+                
+                <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-blue-500 hover:shadow-xl transition duration-300">
+                    <div class="text-sm text-gray-500">Voltaje Batería</div>
+                    <div class="text-2xl font-extrabold mt-1" id="voltajeBateria">-- V</div>
+                </div>
+                
+                <div class="bg-white p-5 rounded-xl shadow-lg relative overflow-hidden flex flex-col justify-between hover:shadow-xl transition duration-300 border-t-4 border-gray-300">
+                    <div class="text-sm text-gray-500 z-10 relative">% Batería</div>
+                    <div class="text-2xl font-extrabold z-10 relative mt-1" id="porcentajeBateria">--%</div>
+                    <div class="w-16 h-8 border-2 border-gray-400 rounded-lg mt-2 relative mx-auto">
+                        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-2 bg-gray-400 rounded-r-sm"></div>
+                        <div id="bateriaFill" class="h-full rounded-md transition-all duration-500 ease-out" style="width:0; opacity:0.8;"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-yellow-400 hover:shadow-xl transition duration-300">
+                    <div class="text-sm text-gray-500 flex items-center justify-center">
+                        <span id="panelIcon" class="text-xl mr-2 transition-colors duration-500">☀️</span>
+                        % Panel Solar
+                    </div>
+                    <div class="text-2xl font-extrabold mt-1" id="porcentajePanel">--%</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="text-xl font-semibold mb-4 text-center text-gray-700">Sensores Ambientales</h3>
+        <div class="flex justify-center mb-10">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 w-full max-w-5xl text-center">
+
+                <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-red-500 hover:shadow-xl transition duration-300">
+                    <div class="text-sm text-gray-500">AHT Temperatura</div>
+                    <div class="text-2xl font-extrabold mt-1" id="ahtTemp">-- °C</div>
+                </div>
+                
+                <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-cyan-500 hover:shadow-xl transition duration-300">
+                    <div class="text-sm text-gray-500">AHT Humedad</div>
+                    <div class="text-2xl font-extrabold mt-1" id="ahtHum">-- %</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-red-700 hover:shadow-xl transition duration-300">
+                    <div class="text-sm text-gray-500">BMP Temperatura</div>
+                    <div class="text-2xl font-extrabold mt-1" id="bmpTemp">-- °C</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-purple-500 hover:shadow-xl transition duration-300">
+                    <div class="text-sm text-gray-500">Presión Atmosférica</div>
+                    <div class="text-2xl font-extrabold mt-1" id="presion">-- hPa</div>
+                </div>
+                
+                <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-yellow-600 hover:shadow-xl transition duration-300">
+                    <div class="text-sm text-gray-500">Nivel de Luz</div>
+                    <div class="text-2xl font-extrabold mt-1" id="luz">--</div>
+                </div>
+            </div>
+        </div>
+        <h3 class="text-xl font-semibold mb-4 text-center text-gray-700">Últimas Lecturas de Sensores de Suelo</h3>
+        <div class="flex justify-center">
+            <div class="w-full max-w-4xl overflow-hidden bg-white shadow-xl rounded-xl">
+                <table class="min-w-full text-sm">
+                    <thead class="bg-green-100 text-green-800">
+                        <tr>
+                            <th class="border-b-2 border-green-200 px-4 py-3 text-left w-3/12">Sensor</th>
+                            <th class="border-b-2 border-green-200 px-4 py-3 text-left w-2/12">Valor</th>
+                            <th class="border-b-2 border-green-200 px-4 py-3 text-left w-6/12">Fecha y Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodySensores">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <main id="mainPanel" class="p-6 hidden">
+        <h2 class="text-center text-2xl font-bold mb-6 text-green-800">
+            Historial del Sensor <span id="sensorLabel"></span>
+        </h2>
+
+        <div class="flex justify-center mb-8">
+            <label for="sensorSelect" class="sr-only">Seleccionar Sensor</label>
+            <select id="sensorSelect" class="p-3 border border-green-300 rounded-lg shadow-md hover:border-green-500 transition duration-150 text-base">
+                </select>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-8">
+            <div class="w-full lg:w-5/12 max-w-xl">
+                <canvas id="sensorChart" class="bg-white p-6 rounded-xl shadow-xl w-full h-96"></canvas>
+            </div>
+            <div class="w-full lg:w-5/12 max-w-xl overflow-hidden">
+                <div class="bg-white rounded-xl shadow-xl overflow-auto max-h-96">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-green-100 text-green-800 sticky top-0 shadow-sm">
+                                <th class="border-b-2 border-green-200 px-4 py-2 text-left">Fecha y hora</th>
+                                <th class="border-b-2 border-green-200 px-4 py-2 text-left">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sensorTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main id="historyPanel" class="p-6 hidden">
+        <h2 class="text-center text-2xl font-bold mb-6 text-green-800">
+            Comparativa de Sensores
+        </h2>
+
+        <div class="flex justify-center">
+            <div class="w-full max-w-5xl">
+                <canvas id="compareChart" class="bg-white p-6 rounded-xl shadow-xl w-full h-96"></canvas>
+            </div>
+        </div>
+        
+        <div class="flex justify-end mt-6 max-w-5xl mx-auto">
+            <button id="downloadBtn" class="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition duration-150 shadow-md">
+                Descargar Imagen
+            </button>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>
