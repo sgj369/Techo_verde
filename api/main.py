@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Any
 import gspread
 import json
 
@@ -28,40 +28,56 @@ class SensorResponse(BaseModel):
     datos: List[Lectura]
 
 # --- CONFIGURACIÓN DE ACCESO SECRETO ---
-# ID de tu Google Sheet (No cambia, está incrustado en la URL)
+# ID de tu Google Sheet
 SHEET_ID = "1Mu0mfmwoWRI_kJ8EweGpJT1g608t6EQixtfevX0z0ac"
 SHEET_NAME = "Lecturas" # Nombre de la pestaña con los datos
 
 # Leemos la llave secreta JSON de la variable de entorno configurada en Render
 SERVICE_ACCOUNT_JSON = os.environ.get("GOOGLE_CREDENTIALS_JSON") 
 
-# --- FUNCIÓN CENTRAL DE LECTURA DE GOOGLE SHEETS ---
+# --- FUNCIÓN CENTRAL DE LECTURA DE GOOGLE SHEETS (CORREGIDA) ---
 
 def get_sheet_data() -> List[Dict[str, str]]:
-    """Autentica con el JSON y lee todos los datos de la hoja en tiempo real."""
+    """Autentica con el JSON y lee todos los datos de la hoja de manera robusta."""
     if not SERVICE_ACCOUNT_JSON:
         print("ERROR: GOOGLE_CREDENTIALS_JSON no está configurado.")
-        # Retorna una lista vacía si la llave no está configurada (importante para evitar fallos de despliegue)
         return [] 
     
     try:
-        # 1. Autenticar usando el JSON de la variable de entorno
-        # Convertimos el texto JSON a un diccionario de Python
+        # 1. Autenticar
         creds_dict = json.loads(SERVICE_ACCOUNT_JSON)
         gc = gspread.service_account_from_dict(creds_dict)
         
-        # 2. Abrir la hoja por su ID (método más robusto)
+        # 2. Abrir la hoja por su ID
         sh = gc.open_by_key(SHEET_ID)
         worksheet = sh.worksheet(SHEET_NAME)
         
-        # 3. Leer todos los valores (get_all_records() lee la hoja como una lista de diccionarios)
-        return worksheet.get_all_records()
+        # 3. Leer todos los valores como lista de listas (más robusto que get_all_records)
+        all_values = worksheet.get_all_values()
+        
+        if not all_values:
+            return []
+            
+        # 4. Mapear manualmente los datos (Saltamos la fila de encabezado y mapeamos)
+        headers = all_values[0] # La primera fila es el encabezado
+        data_rows = all_values[1:] # El resto son datos
+        
+        processed_data = []
+        for row in data_rows:
+            row_dict = {}
+            for i, header in enumerate(headers):
+                # Asignamos el valor, rellenando con cadenas vacías si la fila es más corta
+                row_dict[header] = row[i] if i < len(row) else ""
+            processed_data.append(row_dict)
+            
+        return processed_data
 
     except Exception as e:
+        # Este error ahora solo se activará por fallos de red o de clave, no por encabezados
         print("❌ Error al acceder a Google Sheets:", str(e))
         return []
 
-# --- RUTAS DE LA API ---
+# --- RUTAS DE LA API (SIN CAMBIOS DE LÓGICA) ---
 
 @app.get("/sensor/{sensor_id}", response_model=SensorResponse)
 def get_sensor(sensor_id: str):
@@ -71,7 +87,7 @@ def get_sensor(sensor_id: str):
         
         datos = []
         for row in rows:
-            # Verifica que la columna 'Timestamp' y la columna del sensor tengan datos
+            # Ahora la verificación es más robusta porque el mapeo se hizo en get_sheet_data()
             if row.get("Timestamp") and row.get(sensor_id, "").strip():
                 datos.append({
                     "timestamp": row["Timestamp"],
@@ -86,7 +102,7 @@ def get_sensor(sensor_id: str):
 
 @app.get("/sensores", response_model=List[SensorResponse])
 def get_all_sensors():
-    """Ruta para obtener los datos de todos los sensores (usada para la Comparativa y Resumen)."""
+    """Ruta para obtener los datos de todos los sensores."""
     sensores = [f"Sensor{i}" for i in range(1, 9)]
     try:
         rows = get_sheet_data()
@@ -111,14 +127,12 @@ def get_all_sensors():
 @app.get("/extras")
 def get_extras():
     """Ruta para obtener el estado actual del sistema (Batería, Panel)."""
-    # Campos que se esperan para el estado del sistema
     campos = ["voltajePanel", "voltajeBateria", "porcentajeBateria", "porcentajePanel"]
     try:
         rows = get_sheet_data()
         
         # Iteramos al revés para encontrar la fila más reciente con datos completos
         for row in reversed(rows):
-            # Comprueba que todos los campos de extras tengan un valor
             if all(row.get(campo, "").strip() != "" for campo in campos):
                 return {campo: row[campo] for campo in campos}
                 
