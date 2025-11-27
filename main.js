@@ -245,7 +245,7 @@ async function initResumenPanel() {
     const datos = sensor.datos;
     const colorSensor = COLORES_SENSORES[i] || '#000000'; // Obtener color
     
-    const ultimo = datos[0]; // <--- CORRECCIÓN: Tomar el primer dato, que es el más RECIENTE
+    const ultimo = datos[0]; // Tomar el dato más reciente
 
     if (ultimo) {
       const row = document.createElement("tr");
