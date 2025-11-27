@@ -303,36 +303,71 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // =======================================================
-        // ******* NUEVOS SENSORES AMBIENTALES *******
+        // ******* NUEVOS SENSORES AMBIENTALES (con lógica de íconos) *******
         // =======================================================
-        // AHT Temp (Asumiendo que el valor es temperatura en Celsius)
+        
+        // AHT Temp (Temperatura Ambiente)
+        const ahtTemp = parseFloat(extras.ahtTemp) || 0;
         if (document.getElementById("ahtTemp")) {
-            const val = extras.ahtTemp ?? "--";
-            document.getElementById("ahtTemp").textContent = typeof val === 'number' ? val.toFixed(2) + " °C" : val;
+            document.getElementById("ahtTemp").textContent = ahtTemp.toFixed(2) + " °C";
+        }
+        const ahtTempIcon = document.getElementById("ahtTempIcon");
+        if (ahtTempIcon) {
+            if (ahtTemp > 30) { ahtTempIcon.textContent = '🥵'; ahtTempIcon.style.color = '#ef4444'; } // Muy caliente
+            else if (ahtTemp < 10 && ahtTemp > 0) { ahtTempIcon.textContent = '🥶'; ahtTempIcon.style.color = '#3b82f6'; } // Muy frío
+            else if (ahtTemp <= 0) { ahtTempIcon.textContent = '❄️'; ahtTempIcon.style.color = '#bfdbfe'; } // Helado
+            else { ahtTempIcon.textContent = '🌡️'; ahtTempIcon.style.color = '#ef4444'; } // Normal
         }
 
-        // AHT Hum (Asumiendo que el valor es humedad en porcentaje)
+        // AHT Hum (Humedad Ambiente)
+        const ahtHum = parseFloat(extras.ahtHum) || 0;
         if (document.getElementById("ahtHum")) {
-            const val = extras.ahtHum ?? "--";
-            document.getElementById("ahtHum").textContent = typeof val === 'number' ? val.toFixed(2) + " %" : val;
+            document.getElementById("ahtHum").textContent = ahtHum.toFixed(2) + " %";
+        }
+        const ahtHumIcon = document.getElementById("ahtHumIcon");
+        if (ahtHumIcon) {
+            if (ahtHum > 70) { ahtHumIcon.textContent = '🌧️'; ahtHumIcon.style.color = '#2563eb'; } // Muy húmedo
+            else if (ahtHum < 30) { ahtHumIcon.textContent = '🏜️'; ahtHumIcon.style.color = '#f97316'; } // Muy seco
+            else { ahtHumIcon.textContent = '💧'; ahtHumIcon.style.color = '#0ea5e9'; } // Normal
         }
 
-        // BMP Temp (Asumiendo que el valor es temperatura en Celsius)
+        // BMP Temp (Temperatura de Presión) - similar a AHT Temp pero puede tener rangos diferentes
+        const bmpTemp = parseFloat(extras.bmpTemp) || 0;
         if (document.getElementById("bmpTemp")) {
-            const val = extras.bmpTemp ?? "--";
-            document.getElementById("bmpTemp").textContent = typeof val === 'number' ? val.toFixed(2) + " °C" : val;
+            document.getElementById("bmpTemp").textContent = bmpTemp.toFixed(2) + " °C";
+        }
+        const bmpTempIcon = document.getElementById("bmpTempIcon");
+        if (bmpTempIcon) {
+            if (bmpTemp > 30) { bmpTempIcon.textContent = '🔥'; bmpTempIcon.style.color = '#dc2626'; }
+            else if (bmpTemp < 10 && bmpTemp > 0) { bmpTempIcon.textContent = '🧊'; bmpTempIcon.style.color = '#60a5fa'; }
+            else if (bmpTemp <= 0) { bmpTempIcon.textContent = '🥶'; bmpTempIcon.style.color = '#3b82f6'; } // Helado
+            else { bmpTempIcon.textContent = '🌡️'; bmpTempIcon.style.color = '#ef4444'; } // Normal
         }
 
-        // Presión (Asumiendo que el valor es presión en hPa o mbar)
+        // Presión (Presión Atmosférica)
+        const presion = parseFloat(extras.presion) || 0;
         if (document.getElementById("presion")) {
-            const val = extras.presion ?? "--";
-            document.getElementById("presion").textContent = typeof val === 'number' ? val.toFixed(2) + " hPa" : val;
+            document.getElementById("presion").textContent = presion.toFixed(2) + " hPa";
+        }
+        const presionIcon = document.getElementById("presionIcon");
+        if (presionIcon) {
+            // Valores típicos: 1013 hPa al nivel del mar. >1020 alta, <1000 baja
+            if (presion > 1010) { presionIcon.textContent = '📈'; presionIcon.style.color = '#16a34a'; } // Alta presión
+            else if (presion < 990) { presionIcon.textContent = '📉'; presionIcon.style.color = '#dc2626'; } // Baja presión
+            else { presionIcon.textContent = '🌬️'; presionIcon.style.color = '#6b7280'; } // Normal
         }
         
-        // Luz (Asumiendo que el valor es un índice o nivel)
+        // Luz (Nivel de Luz)
+        const luz = parseFloat(extras.luz) || 0;
         if (document.getElementById("luz")) {
-            const val = extras.luz ?? "--";
-            document.getElementById("luz").textContent = typeof val === 'number' ? val.toFixed(2) : val;
+            document.getElementById("luz").textContent = luz.toFixed(2); // Sin unidad específica
+        }
+        const luzIcon = document.getElementById("luzIcon");
+        if (luzIcon) {
+            if (luz > 800) { luzIcon.textContent = '☀️'; luzIcon.style.color = '#fde047'; } // Mucha luz
+            else if (luz > 200) { luzIcon.textContent = '💡'; luzIcon.style.color = '#facc15'; } // Luz moderada
+            else if (luz > 50) { luzIcon.textContent = '🕯️'; luzIcon.style.color = '#fcd34d'; } // Poca luz
+            else { luzIcon.textContent = '🌑'; luzIcon.style.color = '#374151'; } // Oscuro
         }
     }
 
