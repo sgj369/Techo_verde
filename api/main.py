@@ -1,3 +1,4 @@
+import os # ¡Añadir esta línea!
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -17,8 +18,9 @@ app.add_middleware(
 )
 
 # URL del archivo CSV público de Google Sheets
-CSV_URL = "https://docs.google.com/spreadsheets/d/1Mu0mfmwoWRI_kJ8EweGpJT1g608t6EQixtfevX0z0ac/gviz/tq?tqx=out:csv&sheet=Lecturas"
-
+#CSV_URL = "https://docs.google.com/spreadsheets/d/1Mu0mfmwoWRI_kJ8EweGpJT1g608t6EQixtfevX0z0ac/gviz/tq?tqx=out:csv&sheet=Lecturas"
+# Nueva línea:
+CSV_URL = os.environ.get("CSV_URL")
 # Modelo de datos
 class Lectura(BaseModel):
     timestamp: str
@@ -140,4 +142,5 @@ def get_resumen():
             "sensores": {f"Sensor{i}": {"timestamp": None, "valor": None} for i in range(1, 9)},
             "extras": {campo: None for campo in campos_extras}
         }
+
 
