@@ -124,8 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const datosOrdenCronologico = [...data].reverse();
 
-        const timestamps = datosOrdenologico.map(d => d.timestamp);
-        const valores = datosOrdenologico.map(d => parseFloat(d.valor));
+        const timestamps = datosOrdenCronologico.map(d => d.timestamp);
+        const valores = datosOrdenCronologico.map(d => parseFloat(d.valor));
 
         if (chart) chart.destroy();
 
