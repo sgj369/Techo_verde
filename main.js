@@ -104,12 +104,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateTable(data) {
         if (!tableBody) return;
         tableBody.innerHTML = "";
-        // Mostrar los datos más recientes primero
-        [...data].reverse().forEach(({ timestamp, valor }) => { 
+        // Usamos la data como viene (inversión simple) para la tabla del Historial
+        data.forEach(({ timestamp, valor }) => { 
             const row = `<tr><td class='border-b border-gray-100 px-4 py-2'>${timestamp}</td><td class='border-b border-gray-100 px-4 py-2 font-medium'>${valor}</td></tr>`;
             tableBody.innerHTML += row;
-        });
+            });
     }
+
 
     function updateChart(data, sensorId) {
         if (!chartCanvas) return;
