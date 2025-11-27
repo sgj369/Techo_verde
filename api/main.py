@@ -73,11 +73,10 @@ def get_sheet_data() -> List[Dict[str, str]]:
         return processed_data
 
     except Exception as e:
-        # Este error ahora solo se activará por fallos de red o de clave, no por encabezados
         print("❌ Error al acceder a Google Sheets:", str(e))
         return []
 
-# --- RUTAS DE LA API (SIN CAMBIOS DE LÓGICA) ---
+# --- RUTAS DE LA API ---
 
 @app.get("/sensor/{sensor_id}", response_model=SensorResponse)
 def get_sensor(sensor_id: str):
@@ -87,7 +86,6 @@ def get_sensor(sensor_id: str):
         
         datos = []
         for row in rows:
-            # Ahora la verificación es más robusta porque el mapeo se hizo en get_sheet_data()
             if row.get("Timestamp") and row.get(sensor_id, "").strip():
                 datos.append({
                     "timestamp": row["Timestamp"],
@@ -126,17 +124,55 @@ def get_all_sensors():
     
 @app.get("/extras")
 def get_extras():
-    """Ruta para obtener el estado actual del sistema (Batería, Panel)."""
-    campos = ["voltajePanel", "voltajeBateria", "porcentajeBateria", "porcentajePanel"]
+    """Ruta para obtener el estado actual del sistema (Batería, Panel) y Sensores Ambientales."""
+    
+    # Lista de todos los campos que el frontend espera en /extras
+    campos_energeticos = ["voltajePanel", "voltajeBateria", "porcentajeBateria", "porcentajePanel"]
+    
+    # ¡AQUÍ ESTÁ LA CORRECCIÓN! Usamos los nombres de columna de tu imagen (sin espacios)
+    campos_ambientales = ["AHT Temp", "AHT Hum", "BMP Temp", "Presión", "Luz"]
+    
+    campos_totales = campos_energeticos + campos_ambientales
+
     try:
         rows = get_sheet_data()
         
-        # Iteramos al revés para encontrar la fila más reciente con datos completos
+        # Iteramos al revés para encontrar la fila más reciente con datos
         for row in reversed(rows):
-            if all(row.get(campo, "").strip() != "" for campo in campos):
-                return {campo: row[campo] for campo in campos}
+            # Aseguramos que la fila tenga valores para todos los campos críticos (usaremos los energéticos como críticos)
+            if all(row.get(campo, "").strip() != "" for campo in campos_energeticos):
                 
-        return {campo: None for campo in campos}
+                # Mapeamos todos los campos totales para devolverlos
+                response_data = {}
+                for campo in campos_totales:
+                    # Usamos el nombre de campo de la hoja como clave
+                    # El frontend (main.js) deberá mapear "AHT Temp" a "ahtTemp"
+                    response_data[campo] = row[campo] if campo in row else None
+                    
+                # Antes de devolver, normalizamos las claves ambientales al formato camelCase
+                # que espera main.js
+                response_data_final = {
+                    "voltajePanel": response_data.get("voltajePanel"),
+                    "voltajeBateria": response_data.get("voltajeBateria"),
+                    "porcentajeBateria": response_data.get("porcentajeBateria"),
+                    "porcentajePanel": response_data.get("porcentajePanel"),
+                    "ahtTemp": response_data.get("AHT Temp"), # Clave corregida
+                    "ahtHum": response_data.get("AHT Hum"),   # Clave corregida
+                    "bmpTemp": response_data.get("BMP Temp"), # Clave corregida
+                    "presion": response_data.get("Presión"), # Clave corregida
+                    "luz": response_data.get("Luz"),         # Clave corregida
+                }
+                
+                return response_data_final
+                
+        # Si no encontramos ninguna fila con datos energéticos completos, devolvemos Nulo
+        return {
+            "voltajePanel": None, "voltajeBateria": None, "porcentajeBateria": None, "porcentajePanel": None,
+            "ahtTemp": None, "ahtHum": None, "bmpTemp": None, "presion": None, "luz": None
+        }
     except Exception as e:
         print("❌ Error en /extras:", str(e))
-        return {campo: None for campo in campos}
+        return {
+            "voltajePanel": None, "voltajeBateria": None, "porcentajeBateria": None, "porcentajePanel": None,
+            "ahtTemp": None, "ahtHum": None, "bmpTemp": None, "presion": None, "luz": None
+        }
