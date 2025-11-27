@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const chartCanvas = document.getElementById("sensorChart")?.getContext("2d");
     const compareChartCanvas = document.getElementById("compareChart")?.getContext("2d");
     const downloadButton = document.getElementById("downloadBtn");
-    // const resumenContainer = document.getElementById("resumenContainer"); // No usado
 
     const menuToggle = document.getElementById("menuToggle");
     const sideMenu = document.getElementById("sideMenu");
@@ -32,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         menuToggle.addEventListener("click", () => {
             sideMenu.classList.toggle("hidden");
         });
-        // Ocultar menú al hacer clic fuera (opcional, pero mejora la UX)
+        // Ocultar menú al hacer clic fuera
         document.addEventListener("click", (e) => {
             if (!sideMenu.contains(e.target) && !menuToggle.contains(e.target)) {
                 sideMenu.classList.add("hidden");
@@ -53,11 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = document.getElementById(sectionId);
         if (target) target.classList.remove("hidden");
 
-        // Ejecuta función específica según el panel mostrado
         if (sectionId === "resumenPanel") {
             initResumenPanel();
         } else if (sectionId === "mainPanel") {
-            // Asegura que se cargue el primer sensor o el seleccionado
             const selectedSensor = sensorSelect.value || "Sensor1";
             updateSensor(selectedSensor);
         } else if (sectionId === "historyPanel") {
@@ -70,11 +67,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Hacer la función accesible globalmente
     window.showSection = showSection;
 
+    // --- FUNCIONES DE FETCHING DE DATOS ---
+
     async function fetchSensorData(sensorId) {
         try {
             const response = await fetch(`${apiUrl}/sensor/${sensorId}`);
             const json = await response.json();
-            return json.datos.reverse(); // Datos más recientes al final (para la tabla)
+            // ¡IMPORTANTE! Devolver los datos en orden natural: Antiguo -> Reciente
+            return json.datos; 
         } catch (err) {
             console.error("Error al obtener datos:", err);
             return [];
@@ -101,28 +101,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // --- FUNCIONES DE RENDERIZADO ---
+
     function updateTable(data) {
         if (!tableBody) return;
         tableBody.innerHTML = "";
-        // Usamos la data como viene (inversión simple) para la tabla del Historial
-        data.forEach(({ timestamp, valor }) => { 
+        
+        // Invertir la lista para mostrar el dato más reciente primero en la tabla
+        data.slice().reverse().forEach(({ timestamp, valor }) => { 
             const row = `<tr><td class='border-b border-gray-100 px-4 py-2'>${timestamp}</td><td class='border-b border-gray-100 px-4 py-2 font-medium'>${valor}</td></tr>`;
             tableBody.innerHTML += row;
-            });
+        });
     }
-
 
     function updateChart(data, sensorId) {
         if (!chartCanvas) return;
 
-        // Obtener el color asignado al sensor para la gráfica
         const sensorIndex = parseInt(sensorId.replace("Sensor", "")) - 1;
-        const colorSensor = COLORES_SENSORES[sensorIndex] || '#000000'; // Fallback a negro
+        const colorSensor = COLORES_SENSORES[sensorIndex] || '#000000';
 
-        const datosOrdenCronologico = [...data].reverse();
-
-        const timestamps = datosOrdenCronologico.map(d => d.timestamp);
-        const valores = datosOrdenCronologico.map(d => parseFloat(d.valor));
+        // Usamos la data como viene [Antiguo -> Reciente] para el orden cronológico del gráfico
+        const timestamps = data.map(d => d.timestamp); 
+        const valores = data.map(d => parseFloat(d.valor));
 
         if (chart) chart.destroy();
 
@@ -134,24 +134,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     label: `${sensorId}`,
                     data: valores,
                     borderColor: colorSensor,
-                    backgroundColor: colorSensor + '40', // Fondo semi-transparente
+                    backgroundColor: colorSensor + '40', 
                     tension: 0.3,
                     pointRadius: 3,
-                    fill: false // Cambiar a 'origin' si quieres rellenar el área
+                    fill: false 
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
-                        display: false // No mostrar leyenda, el título ya indica el sensor
-                    }
+                    legend: { display: false }
                 },
                 scales: {
                     x: { title: { display: true, text: "Tiempo", color: '#4b5563' } },
                     y: { 
                         title: { display: true, text: "Valor Registrado", color: '#4b5563' },
-                        grid: { color: '#e5e7eb' } // Líneas de cuadrícula más suaves
+                        grid: { color: '#e5e7eb' } 
                     }
                 }
             }
@@ -204,18 +202,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Etiquetas (timestamps) ordenadas cronológicamente
-            const etiquetas = sensores[0]?.datos.map(d => d.timestamp).reverse() || [];
+            // Datos ya vienen Oldest -> Newest. Usamos slice().reverse() para el orden cronológico.
+            const etiquetas = sensores[0]?.datos.map(d => d.timestamp) || [];
 
             const datasets = sensores.map((sensor, i) => ({
                 label: sensor.sensor,
-                // Valores ordenados cronológicamente
-                data: sensor.datos.map(d => parseFloat(d.valor)).reverse(), 
+                data: sensor.datos.map(d => parseFloat(d.valor)), 
                 borderColor: colores[i % colores.length],
                 tension: 0.3,
                 pointRadius: 2,
                 fill: false,
-                hidden: !(i === 0 || i === 7) // Muestra solo sensor 1 y 8 al inicio
+                hidden: !(i === 0 || i === 7) 
             }));
 
             if (compareChart) compareChart.destroy();
@@ -230,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     responsive: true,
                     plugins: {
                         legend: {
-                            position: 'bottom', // Mover leyenda a la parte inferior
+                            position: 'bottom', 
                             labels: {
                                 usePointStyle: true,
                                 padding: 20
@@ -259,17 +256,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const extras = await fetchExtras();
 
         const tbody = document.getElementById("tbodySensores");
-        if (tbody) tbody.innerHTML = ""; // Limpia contenido previo
+        if (tbody) tbody.innerHTML = ""; 
 
         sensores.forEach((sensor, i) => { 
             const datos = sensor.datos;
             const colorSensor = COLORES_SENSORES[i] || '#000000';
             
-            const ultimo = datos[0]; // Dato más reciente
+            // TOMAR EL ÚLTIMO ELEMENTO DE LA LISTA (EL MÁS RECIENTE)
+            const ultimo = datos[datos.length - 1]; 
 
             if (ultimo && tbody) {
                 const row = document.createElement("tr");
-                // Clases para un estilo más limpio en la tabla del resumen
                 row.classList.add('hover:bg-green-50', 'transition', 'duration-100');
 
                 row.innerHTML = `
@@ -293,11 +290,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const bateriaPct = parseFloat(extras.porcentajeBateria) || 0;
         if (document.getElementById("porcentajeBateria")) document.getElementById("porcentajeBateria").textContent = bateriaPct + "%";
         
-        // Establece el ancho y color de la barra (Nuevo estilo de batería)
         const bateriaFill = document.getElementById("bateriaFill");
         if (bateriaFill) {
             bateriaFill.style.width = bateriaPct + "%";
-            bateriaFill.style.backgroundColor = bateriaPct > 50 ? '#10b981' : (bateriaPct > 20 ? '#f97316' : '#ef4444'); // Verde, Naranja, Rojo
+            bateriaFill.style.backgroundColor = bateriaPct > 50 ? '#10b981' : (bateriaPct > 20 ? '#f97316' : '#ef4444');
         }
 
         // Lógica del Panel Solar (Ícono y color)
@@ -306,9 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const panelIcon = document.getElementById("panelIcon");
         if (panelIcon) {
-            // Color: Amarillo si produce, Gris si es muy bajo o cero
             panelIcon.style.color = panelPct > 10 ? '#f59e0b' : '#9ca3af'; 
-            // Ícono: Sol si produce, Nube si es cero (simulando falta de luz)
             panelIcon.textContent = panelPct > 0 ? '☀️' : '☁️';
         }
     }
@@ -316,5 +310,5 @@ document.addEventListener("DOMContentLoaded", () => {
     // Inicialización general
     initSensorSelect();
     initResumenPanel();
-    showSection("resumenPanel"); // Asegura que el resumen se muestre al inicio
+    showSection("resumenPanel"); 
 });
