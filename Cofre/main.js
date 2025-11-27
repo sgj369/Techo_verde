@@ -12,6 +12,18 @@ const COLORES_SENSORES = [
     '#ef4444'  // Sensor 8: Red
 ];
 
+// ***************************************
+// FUNCIÓN PARA ABRIR LA HOJA DE CÁLCULO
+// ***************************************
+window.openGoogleSheet = function() {
+    // Reemplaza YOUR_SHEET_ID con el ID real de tu hoja
+    // NOTA: Si tu hoja es pública, esto funcionará. Si es privada (como la usas en la API), 
+    // cada usuario necesitará permisos para verla.
+    const SHEET_ID = "1Mu0mfmwoWRI_kJ8EweGpJT1g608t6EQixtfevX0z0ac"; 
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit#gid=0`;
+    
+    window.open(url, '_blank'); // Abre la URL en una nueva pestaña
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     const apiUrl = "https://techo-verde.onrender.com";
