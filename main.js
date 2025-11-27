@@ -1,7 +1,7 @@
 // main.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  const apiUrl = "https://techo-verde-api-2.onrender.com";
+  const apiUrl = "https://techo-verde.onrender.com";
 
   // DOM Elements
   const sensorLabel = document.getElementById("sensorLabel");
