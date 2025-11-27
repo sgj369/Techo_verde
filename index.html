@@ -59,47 +59,48 @@
 
       <div id="resumenPanel" class="hidden p-4">
       <h2 class="text-xl font-bold mb-4 text-center">Resumen de Sensores</h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full bg-white shadow-md rounded">
-          <thead class="bg-gray-200">
-            <tr>
-              <th class="border px-4 py-2">Sensor</th>
-              <th class="border px-4 py-2">Valor</th>
-              <th class="border px-4 py-2">Fecha y Hora</th>
-            </tr>
-          </thead>
-          <tbody id="tbodySensores">
-                      </tbody>
-        </table>
-      </div>
+      <div class="flex justify-center">
+          <div class="w-full max-w-2xl overflow-x-auto">
+            <table class="min-w-full bg-white shadow-md rounded text-sm">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="border px-4 py-2">Sensor</th>
+                        <th class="border px-4 py-2">Valor</th>
+                        <th class="border px-4 py-2">Fecha y Hora</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodySensores">
+                    </tbody>
+            </table>
+          </div>
+      </div>
 
       <h2 class="text-xl font-bold mt-8 mb-4 text-center">Estado del Sistema</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div class="bg-white p-4 rounded shadow">
-          <div class="text-sm text-gray-500">Voltaje Panel</div>
+                <div class="bg-white p-3 rounded shadow">
+          <div class="text-xs text-gray-500">Voltaje Panel</div>
          <div class="text-xl font-bold" id="voltajePanel">-- V</div>
        </div>
-               <div class="bg-white p-4 rounded shadow">
-         <div class="text-sm text-gray-500">Voltaje Batería</div>
+              <div class="bg-white p-3 rounded shadow">
+         <div class="text-xs text-gray-500">Voltaje Batería</div>
           <div class="text-xl font-bold" id="voltajeBateria">-- V</div>
         </div>
         
-                <div class="bg-white p-4 rounded shadow relative overflow-hidden">
-            <div class="text-sm text-gray-500 z-10 relative">% Batería</div>
+                <div class="bg-white p-3 rounded shadow relative overflow-hidden">
+            <div class="text-xs text-gray-500 z-10 relative">% Batería</div>
             <div class="text-xl font-bold z-10 relative" id="porcentajeBateria">--%</div>
             <div id="bateriaFill" class="absolute inset-0 transition-all duration-500 ease-out" style="width:0; opacity:0.6;"></div>
         </div>
         
-                <div class="bg-white p-4 rounded shadow">
-            <div class="text-sm text-gray-500 flex items-center justify-center">
-                <span id="panelIcon" class="text-2xl mr-2 transition-colors duration-500">☀️</span>
+                <div class="bg-white p-3 rounded shadow">
+            <div class="text-xs text-gray-500 flex items-center justify-center">
+                <span id="panelIcon" class="text-xl mr-2 transition-colors duration-500">☀️</span>
                 % Panel Solar
             </div>
             <div class="text-xl font-bold" id="porcentajePanel">--%</div>
         </div>
      </div>
-    </div>
-
+              
         <main id="historyPanel" class="p-6 hidden">
       <h2 class="text-center text-xl font-semibold mb-4">
         Comparativa de Sensores
