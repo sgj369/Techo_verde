@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Carga de Imagen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-xl">
+        <h1 class="text-2xl font-bold mb-4 text-gray-800">Verificación de Carga de Imagen (Favicon)</h1>
+        
+        <p class="mb-4">Ruta probada: <code class="bg-gray-200 p-1 rounded">img/tv.png</code></p>
+        
+        <div id="resultado" class="text-lg font-semibold p-4 rounded-lg transition duration-300">
+            Cargando...
+        </div>
+
+        <h2 class="text-xl font-semibold mt-6 mb-3">Resultado de la Carga:</h2>
+        <img id="imagenPrueba" src="" alt="Imagen de Prueba" class="hidden max-w-full h-auto border border-gray-300 rounded-lg">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const path = "img/tv.png";
+            const resultadoDiv = document.getElementById('resultado');
+            const imagenElemento = document.getElementById('imagenPrueba');
+            
+            // Establece la ruta del archivo que estamos probando
+            imagenElemento.src = path;
+            
+            imagenElemento.onload = function() {
+                resultadoDiv.textContent = "✅ ¡ÉXITO! La imagen se cargó correctamente.";
+                resultadoDiv.classList.remove('bg-gray-200', 'text-gray-800');
+                resultadoDiv.classList.add('bg-green-100', 'text-green-700');
+                imagenElemento.classList.remove('hidden');
+                console.log("ÉXITO: Imagen cargada desde la ruta: " + path);
+            };
+
+            imagenElemento.onerror = function() {
+                resultadoDiv.textContent = "❌ ERROR: La imagen NO se pudo cargar. Revisa la ruta en el repositorio.";
+                resultadoDiv.classList.remove('bg-gray-200', 'text-gray-800');
+                resultadoDiv.classList.add('bg-red-100', 'text-red-700');
+                console.error("ERROR: Fallo al cargar la imagen desde la ruta: " + path);
+            };
+
+            // Caso de que el archivo ya tenga contenido (solo para desarrollo)
+            if (imagenElemento.complete && imagenElemento.naturalWidth !== 0) {
+                 imagenElemento.onload(); // Simula éxito si ya estaba cargada
+            } else if (imagenElemento.complete) {
+                imagenElemento.onerror(); // Simula error si no cargó
+            }
+        });
+    </script>
+</body>
+</html>
