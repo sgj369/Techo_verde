@@ -13,22 +13,21 @@ const COLORES_SENSORES = [
 ];
 
 // ***************************************
-// FUNCIÓN PARA ABRIR LA HOJA DE CÁLCULO
+// FUNCIÓN PARA ABRIR LA HOJA DE CÁLCULO (Se hace global para el botón en HTML)
 // ***************************************
 window.openGoogleSheet = function() {
-    // Reemplaza YOUR_SHEET_ID con el ID real de tu hoja
-    // NOTA: Si tu hoja es pública, esto funcionará. Si es privada (como la usas en la API), 
-    // cada usuario necesitará permisos para verla.
+    // ID de tu Google Sheet (tomado de tu main.py)
     const SHEET_ID = "1Mu0mfmwoWRI_kJ8EweGpJT1g608t6EQixtfevX0z0ac"; 
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit#gid=0`;
     
     window.open(url, '_blank'); // Abre la URL en una nueva pestaña
 };
 
+
 document.addEventListener("DOMContentLoaded", () => {
     const apiUrl = "https://techo-verde.onrender.com";
 
-    // DOM Elements
+    // DOM Elements (Se mantienen)
     const sensorLabel = document.getElementById("sensorLabel");
     const sensorSelect = document.getElementById("sensorSelect");
     const tableBody = document.getElementById("sensorTableBody");
@@ -43,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         menuToggle.addEventListener("click", () => {
             sideMenu.classList.toggle("hidden");
         });
-        // Ocultar menú al hacer clic fuera
         document.addEventListener("click", (e) => {
             if (!sideMenu.contains(e.target) && !menuToggle.contains(e.target)) {
                 sideMenu.classList.add("hidden");
@@ -64,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = document.getElementById(sectionId);
         if (target) target.classList.remove("hidden");
 
-        // Ejecuta función específica según el panel mostrado
         if (sectionId === "resumenPanel") {
             initResumenPanel();
         } else if (sectionId === "mainPanel") {
@@ -127,8 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const datosOrdenCronologico = [...data].reverse();
 
-        const timestamps = datosOrdenCronologico.map(d => d.timestamp);
-        const valores = datosOrdenCronologico.map(d => parseFloat(d.valor));
+        const timestamps = datosOrdenologico.map(d => d.timestamp);
+        const valores = datosOrdenologico.map(d => parseFloat(d.valor));
 
         if (chart) chart.destroy();
 
@@ -149,9 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
-                        display: false
-                    }
+                    legend: { display: false }
                 },
                 scales: {
                     x: { title: { display: true, text: "Tiempo", color: '#4b5563' } },
@@ -325,10 +320,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const ahtTempIcon = document.getElementById("ahtTempIcon");
         if (ahtTempIcon) {
-            if (ahtTemp > 30) { ahtTempIcon.textContent = '🥵'; ahtTempIcon.style.color = '#ef4444'; } // Muy caliente
-            else if (ahtTemp < 10 && ahtTemp > 0) { ahtTempIcon.textContent = '🥶'; ahtTempIcon.style.color = '#3b82f6'; } // Muy frío
-            else if (ahtTemp <= 0) { ahtTempIcon.textContent = '❄️'; ahtTempIcon.style.color = '#bfdbfe'; } // Helado
-            else { ahtTempIcon.textContent = '🌡️'; ahtTempIcon.style.color = '#ef4444'; } // Normal
+            if (ahtTemp > 30) { ahtTempIcon.textContent = '🥵'; ahtTempIcon.style.color = '#ef4444'; }
+            else if (ahtTemp < 10 && ahtTemp > 0) { ahtTempIcon.textContent = '🥶'; ahtTempIcon.style.color = '#3b82f6'; }
+            else if (ahtTemp <= 0) { ahtTempIcon.textContent = '❄️'; ahtTempIcon.style.color = '#bfdbfe'; }
+            else { ahtTempIcon.textContent = '🌡️'; ahtTempIcon.style.color = '#ef4444'; }
         }
 
         // AHT Hum (Humedad Ambiente)
@@ -338,12 +333,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const ahtHumIcon = document.getElementById("ahtHumIcon");
         if (ahtHumIcon) {
-            if (ahtHum > 70) { ahtHumIcon.textContent = '🌧️'; ahtHumIcon.style.color = '#2563eb'; } // Muy húmedo
-            else if (ahtHum < 30) { ahtHumIcon.textContent = '🏜️'; ahtHumIcon.style.color = '#f97316'; } // Muy seco
-            else { ahtHumIcon.textContent = '💧'; ahtHumIcon.style.color = '#0ea5e9'; } // Normal
+            if (ahtHum > 70) { ahtHumIcon.textContent = '🌧️'; ahtHumIcon.style.color = '#2563eb'; }
+            else if (ahtHum < 30) { ahtHumIcon.textContent = '🏜️'; ahtHumIcon.style.color = '#f97316'; }
+            else { ahtHumIcon.textContent = '💧'; ahtHumIcon.style.color = '#0ea5e9'; }
         }
 
-        // BMP Temp (Temperatura de Presión) - similar a AHT Temp pero puede tener rangos diferentes
+        // BMP Temp (Temperatura de Presión)
         const bmpTemp = parseFloat(extras.bmpTemp) || 0;
         if (document.getElementById("bmpTemp")) {
             document.getElementById("bmpTemp").textContent = bmpTemp.toFixed(2) + " °C";
@@ -352,8 +347,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (bmpTempIcon) {
             if (bmpTemp > 30) { bmpTempIcon.textContent = '🔥'; bmpTempIcon.style.color = '#dc2626'; }
             else if (bmpTemp < 10 && bmpTemp > 0) { bmpTempIcon.textContent = '🧊'; bmpTempIcon.style.color = '#60a5fa'; }
-            else if (bmpTemp <= 0) { bmpTempIcon.textContent = '🥶'; bmpTempIcon.style.color = '#3b82f6'; } // Helado
-            else { bmpTempIcon.textContent = '🌡️'; bmpTempIcon.style.color = '#ef4444'; } // Normal
+            else if (bmpTemp <= 0) { bmpTempIcon.textContent = '🥶'; bmpTempIcon.style.color = '#3b82f6'; }
+            else { bmpTempIcon.textContent = '🌡️'; bmpTempIcon.style.color = '#ef4444'; }
         }
 
         // Presión (Presión Atmosférica)
@@ -363,23 +358,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const presionIcon = document.getElementById("presionIcon");
         if (presionIcon) {
-            // Valores típicos: 1013 hPa al nivel del mar. >1020 alta, <1000 baja
-            if (presion > 1010) { presionIcon.textContent = '📈'; presionIcon.style.color = '#16a34a'; } // Alta presión
-            else if (presion < 990) { presionIcon.textContent = '📉'; presionIcon.style.color = '#dc2626'; } // Baja presión
-            else { presionIcon.textContent = '🌬️'; presionIcon.style.color = '#6b7280'; } // Normal
+            if (presion > 1010) { presionIcon.textContent = '📈'; presionIcon.style.color = '#16a34a'; }
+            else if (presion < 990) { presionIcon.textContent = '📉'; presionIcon.style.color = '#dc2626'; }
+            else { presionIcon.textContent = '🌬️'; presionIcon.style.color = '#6b7280'; }
         }
         
         // Luz (Nivel de Luz)
         const luz = parseFloat(extras.luz) || 0;
         if (document.getElementById("luz")) {
-            document.getElementById("luz").textContent = luz.toFixed(2); // Sin unidad específica
+            document.getElementById("luz").textContent = luz.toFixed(2);
         }
         const luzIcon = document.getElementById("luzIcon");
         if (luzIcon) {
-            if (luz > 800) { luzIcon.textContent = '☀️'; luzIcon.style.color = '#fde047'; } // Mucha luz
-            else if (luz > 200) { luzIcon.textContent = '💡'; luzIcon.style.color = '#facc15'; } // Luz moderada
-            else if (luz > 50) { luzIcon.textContent = '🕯️'; luzIcon.style.color = '#fcd34d'; } // Poca luz
-            else { luzIcon.textContent = '🌑'; luzIcon.style.color = '#374151'; } // Oscuro
+            if (luz > 800) { luzIcon.textContent = '☀️'; luzIcon.style.color = '#fde047'; }
+            else if (luz > 200) { luzIcon.textContent = '💡'; luzIcon.style.color = '#facc15'; }
+            else if (luz > 50) { luzIcon.textContent = '🕯️'; luzIcon.style.color = '#fcd34d'; }
+            else { luzIcon.textContent = '🌑'; luzIcon.style.color = '#374151'; }
         }
     }
 
