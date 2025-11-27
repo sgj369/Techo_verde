@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba de Tabla Compacta</title>
+    <title>Prueba de Tabla Compacta y Centrada</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Estilo personalizado para simular los colores de los círculos (puntos de los sensores) */
@@ -33,9 +33,11 @@
                     
                     <thead class="bg-green-100 text-green-800">
                         <tr>
-                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-3/12">Sensor</th>
-                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-2/12">Valor</th>
-                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-6/12">Fecha y Hora</th>
+                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-4/12">Sensor</th>
+                            
+                            <th class="border-b-2 border-green-200 px-4 py-2 text-center w-3/12">Valor</th>
+                            
+                            <th class="border-b-2 border-green-200 px-4 py-2 text-left w-5/12">Fecha y Hora</th>
                         </tr>
                     </thead>
                     
@@ -45,7 +47,7 @@
                                 <span class="sensor-point" style="background-color:#10b981;"></span>
                                 Sensor1
                             </td>
-                            <td class="border-b border-gray-100 px-4 py-1 font-semibold">26.06</td>
+                            <td class="border-b border-gray-100 px-4 py-1 font-semibold text-center">26.06</td>
                             <td class="border-b border-gray-100 px-4 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
                         </tr>
                         <tr class="hover:bg-green-50 transition duration-100">
@@ -53,7 +55,7 @@
                                 <span class="sensor-point" style="background-color:#3b82f6;"></span>
                                 Sensor2
                             </td>
-                            <td class="border-b border-gray-100 px-4 py-1 font-semibold">26.69</td>
+                            <td class="border-b border-gray-100 px-4 py-1 font-semibold text-center">26.69</td>
                             <td class="border-b border-gray-100 px-4 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
                         </tr>
                         <tr class="hover:bg-green-50 transition duration-100">
@@ -61,7 +63,7 @@
                                 <span class="sensor-point" style="background-color:#f97316;"></span>
                                 Sensor3
                             </td>
-                            <td class="border-b border-gray-100 px-4 py-1 font-semibold">27.81</td>
+                            <td class="border-b border-gray-100 px-4 py-1 font-semibold text-center">27.81</td>
                             <td class="border-b border-gray-100 px-4 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
                         </tr>
                     </tbody>
