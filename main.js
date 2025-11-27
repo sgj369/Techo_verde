@@ -251,12 +251,12 @@ async function initResumenPanel() {
       const row = document.createElement("tr");
 
       row.innerHTML = `
-          <td class="border px-4 py-2 flex items-center">
-            <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorSensor}; margin-right:8px;"></span>
-            ${sensor.sensor}
-          </td>
-        <td class="border px-4 py-2">${ultimo.valor ?? "--"}</td>
-        <td class="border px-4 py-2">${ultimo.timestamp ?? "--"}</td>
+        <td class="border px-3 py-1 flex items-center">
+          <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorSensor}; margin-right:8px;"></span>
+          ${sensor.sensor}
+        </td>
+        <td class="border px-3 py-1">${ultimo.valor ?? "--"}</td>
+        <td class="border px-3 py-1">${ultimo.timestamp ?? "--"}</td>
       `;
 
       tbody.appendChild(row);
