@@ -270,14 +270,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 const row = document.createElement("tr");
                 row.classList.add('hover:bg-green-50', 'transition', 'duration-100');
 
-                row.innerHTML = `
-                    <td class="border-b border-gray-100 px-4 py-2 flex items-center">
-                        <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorSensor}; margin-right:10px;"></span>
-                        ${sensor.sensor}
-                    </td>
-                    <td class="border-b border-gray-100 px-4 py-2 font-semibold">${ultimo.valor ?? "--"}</td>
-                    <td class="border-b border-gray-100 px-4 py-2 text-gray-500 text-xs">${ultimo.timestamp ?? "--"}</td>
-                `;
+            row.innerHTML = `
+                <td class="border-b border-gray-100 px-4 py-1 flex items-center">
+                    <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorSensor}; margin-right:10px;"></span>
+                    ${sensor.sensor}
+                </td>
+                <td class="border-b border-gray-100 px-4 py-1 font-semibold">${ultimo.valor ?? "--"}</td>
+                <td class="border-b border-gray-100 px-4 py-1 text-gray-500 text-xs">${ultimo.timestamp ?? "--"}</td>
+            `;
+
 
                 tbody.appendChild(row);
             }
