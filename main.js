@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = document.getElementById(sectionId);
         if (target) target.classList.remove("hidden");
 
+        // Ejecuta función específica según el panel mostrado
         if (sectionId === "resumenPanel") {
             initResumenPanel();
         } else if (sectionId === "mainPanel") {
@@ -64,17 +65,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (sideMenu) sideMenu.classList.add("hidden");
     }
 
-    // Hacer la función accesible globalmente
     window.showSection = showSection;
-
-    // --- FUNCIONES DE FETCHING DE DATOS ---
 
     async function fetchSensorData(sensorId) {
         try {
             const response = await fetch(`${apiUrl}/sensor/${sensorId}`);
             const json = await response.json();
-            // ¡IMPORTANTE! Devolver los datos en orden natural: Antiguo -> Reciente
-            return json.datos; 
+            return json.datos.reverse();
         } catch (err) {
             console.error("Error al obtener datos:", err);
             return [];
@@ -101,14 +98,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- FUNCIONES DE RENDERIZADO ---
-
     function updateTable(data) {
         if (!tableBody) return;
         tableBody.innerHTML = "";
-        
-        // Invertir la lista para mostrar el dato más reciente primero en la tabla
-        data.slice().reverse().forEach(({ timestamp, valor }) => { 
+        [...data].reverse().forEach(({ timestamp, valor }) => { 
             const row = `<tr><td class='border-b border-gray-100 px-4 py-2'>${timestamp}</td><td class='border-b border-gray-100 px-4 py-2 font-medium'>${valor}</td></tr>`;
             tableBody.innerHTML += row;
         });
@@ -120,9 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const sensorIndex = parseInt(sensorId.replace("Sensor", "")) - 1;
         const colorSensor = COLORES_SENSORES[sensorIndex] || '#000000';
 
-        // Usamos la data como viene [Antiguo -> Reciente] para el orden cronológico del gráfico
-        const timestamps = data.map(d => d.timestamp); 
-        const valores = data.map(d => parseFloat(d.valor));
+        const datosOrdenCronologico = [...data].reverse();
+
+        const timestamps = datosOrdenCronologico.map(d => d.timestamp);
+        const valores = datosOrdenCronologico.map(d => parseFloat(d.valor));
 
         if (chart) chart.destroy();
 
@@ -134,22 +128,24 @@ document.addEventListener("DOMContentLoaded", () => {
                     label: `${sensorId}`,
                     data: valores,
                     borderColor: colorSensor,
-                    backgroundColor: colorSensor + '40', 
+                    backgroundColor: colorSensor + '40',
                     tension: 0.3,
                     pointRadius: 3,
-                    fill: false 
+                    fill: false
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: false }
+                    legend: {
+                        display: false
+                    }
                 },
                 scales: {
                     x: { title: { display: true, text: "Tiempo", color: '#4b5563' } },
                     y: { 
                         title: { display: true, text: "Valor Registrado", color: '#4b5563' },
-                        grid: { color: '#e5e7eb' } 
+                        grid: { color: '#e5e7eb' }
                     }
                 }
             }
@@ -202,17 +198,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Datos ya vienen Oldest -> Newest. Usamos slice().reverse() para el orden cronológico.
-            const etiquetas = sensores[0]?.datos.map(d => d.timestamp) || [];
+            const etiquetas = sensores[0]?.datos.map(d => d.timestamp).reverse() || [];
 
             const datasets = sensores.map((sensor, i) => ({
                 label: sensor.sensor,
-                data: sensor.datos.map(d => parseFloat(d.valor)), 
+                data: sensor.datos.map(d => parseFloat(d.valor)).reverse(), 
                 borderColor: colores[i % colores.length],
                 tension: 0.3,
                 pointRadius: 2,
                 fill: false,
-                hidden: !(i === 0 || i === 7) 
+                hidden: !(i === 0 || i === 7)
             }));
 
             if (compareChart) compareChart.destroy();
@@ -227,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     responsive: true,
                     plugins: {
                         legend: {
-                            position: 'bottom', 
+                            position: 'bottom',
                             labels: {
                                 usePointStyle: true,
                                 padding: 20
@@ -256,14 +251,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const extras = await fetchExtras();
 
         const tbody = document.getElementById("tbodySensores");
-        if (tbody) tbody.innerHTML = ""; 
+        if (tbody) tbody.innerHTML = "";
 
         sensores.forEach((sensor, i) => { 
             const datos = sensor.datos;
             const colorSensor = COLORES_SENSORES[i] || '#000000';
             
-            // TOMAR EL ÚLTIMO ELEMENTO DE LA LISTA (EL MÁS RECIENTE)
-            const ultimo = datos[datos.length - 1]; 
+            const ultimo = datos[0];
 
             if (ultimo && tbody) {
                 const row = document.createElement("tr");
@@ -282,11 +276,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Estado del sistema
+        // =======================================================
+        // ACTUALIZACIÓN DE ESTADO DEL SISTEMA (ENERGÉTICO)
+        // =======================================================
         if (document.getElementById("voltajePanel")) document.getElementById("voltajePanel").textContent = (extras.voltajePanel ?? "--") + " V";
         if (document.getElementById("voltajeBateria")) document.getElementById("voltajeBateria").textContent = (extras.voltajeBateria ?? "--") + " V";
 
-        // Lógica de la Batería (Efecto de Relleno)
+        // Lógica de la Batería
         const bateriaPct = parseFloat(extras.porcentajeBateria) || 0;
         if (document.getElementById("porcentajeBateria")) document.getElementById("porcentajeBateria").textContent = bateriaPct + "%";
         
@@ -296,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
             bateriaFill.style.backgroundColor = bateriaPct > 50 ? '#10b981' : (bateriaPct > 20 ? '#f97316' : '#ef4444');
         }
 
-        // Lógica del Panel Solar (Ícono y color)
+        // Lógica del Panel Solar
         const panelPct = parseFloat(extras.porcentajePanel) || 0;
         if (document.getElementById("porcentajePanel")) document.getElementById("porcentajePanel").textContent = panelPct + "%";
         
@@ -305,10 +301,43 @@ document.addEventListener("DOMContentLoaded", () => {
             panelIcon.style.color = panelPct > 10 ? '#f59e0b' : '#9ca3af'; 
             panelIcon.textContent = panelPct > 0 ? '☀️' : '☁️';
         }
+
+        // =======================================================
+        // ******* NUEVOS SENSORES AMBIENTALES *******
+        // =======================================================
+        // AHT Temp (Asumiendo que el valor es temperatura en Celsius)
+        if (document.getElementById("ahtTemp")) {
+            const val = extras.ahtTemp ?? "--";
+            document.getElementById("ahtTemp").textContent = typeof val === 'number' ? val.toFixed(2) + " °C" : val;
+        }
+
+        // AHT Hum (Asumiendo que el valor es humedad en porcentaje)
+        if (document.getElementById("ahtHum")) {
+            const val = extras.ahtHum ?? "--";
+            document.getElementById("ahtHum").textContent = typeof val === 'number' ? val.toFixed(2) + " %" : val;
+        }
+
+        // BMP Temp (Asumiendo que el valor es temperatura en Celsius)
+        if (document.getElementById("bmpTemp")) {
+            const val = extras.bmpTemp ?? "--";
+            document.getElementById("bmpTemp").textContent = typeof val === 'number' ? val.toFixed(2) + " °C" : val;
+        }
+
+        // Presión (Asumiendo que el valor es presión en hPa o mbar)
+        if (document.getElementById("presion")) {
+            const val = extras.presion ?? "--";
+            document.getElementById("presion").textContent = typeof val === 'number' ? val.toFixed(2) + " hPa" : val;
+        }
+        
+        // Luz (Asumiendo que el valor es un índice o nivel)
+        if (document.getElementById("luz")) {
+            const val = extras.luz ?? "--";
+            document.getElementById("luz").textContent = typeof val === 'number' ? val.toFixed(2) : val;
+        }
     }
 
     // Inicialización general
     initSensorSelect();
     initResumenPanel();
-    showSection("resumenPanel"); 
+    showSection("resumenPanel");
 });
