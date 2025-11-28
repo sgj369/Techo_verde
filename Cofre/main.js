@@ -1,5 +1,3 @@
-// main.js - Código Completo y Corregido
-
 // Definición de colores para cada sensor (usados en gráficas y resumen)
 const COLORES_SENSORES = [
     '#10b981', // Sensor 1: Emerald/Verde Vivo (tailwind-500)
