@@ -16,7 +16,7 @@ const COLORES_SENSORES = [
 window.openGoogleSheet = function() {
     // ID de tu Google Sheet (tomado de tu main.py)
     const SHEET_ID = "1Mu0mfmwoWRI_kJ8EweGpJT1g608t6EQixtfevX0z0ac"; 
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit#gid=0`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/view#gid=0`;
     
     window.open(url, '_blank'); // Abre la URL en una nueva pestaña
 };
