@@ -3,47 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba de Tabla Reducción de Padding</title>
+    <title>Prueba de Tabla Final Compacta y Centrada</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Estilo personalizado para simular los colores de los círculos */
         .sensor-point {
             display: inline-block;
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            margin-right: 5px; /* Reducimos el margen aquí también */
+            margin-right: 5px; 
         }
     </style>
 </head>
 <body class="bg-gray-50 p-10 font-sans">
+
     <div class="flex justify-center">
         <div class="w-full max-w-4xl">
+            
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-semibold text-gray-700">Últimas Lecturas de Sensores de Suelo</h3>
-                <button class="bg-green-600 text-white px-4 py-2 text-sm rounded-lg font-semibold">Abrir Google Sheet</button>
+                <button class="bg-green-600 text-white px-4 py-2 text-sm rounded-lg font-semibold">
+                    Abrir Google Sheet
+                </button>
             </div>
             
-            <div class="overflow-hidden bg-white shadow-xl rounded-xl">
-                <table class="min-w-full text-sm">
-                    <thead class="bg-green-100 text-green-800">
-                        <tr>
-                            <th class="border-b-2 border-green-200 px-2 py-2 text-left w-4/12">Sensor</th>
-                            <th class="border-b-2 border-green-200 px-2 py-2 text-center w-3/12">Valor</th>
-                            <th class="border-b-2 border-green-200 px-2 py-2 text-left w-5/12">Fecha y Hora</th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
-                        <tr class="hover:bg-green-50 transition duration-100">
-                            <td class="border-b border-gray-100 px-2 py-1 flex items-center">
-                                <span class="sensor-point" style="background-color:#10b981;"></span>
-                                Sensor1
-                            </td>
-                            <td class="border-b border-gray-100 px-2 py-1 font-semibold text-center">26.06</td>
-                            <td class="border-b border-gray-100 px-2 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
-                        </tr>
+            <div class="flex justify-center">
+                <div class="w-full max-w-2xl overflow-hidden bg-white shadow-xl rounded-xl">
+                    <table class="min-w-full text-sm">
+                        
+                        <thead class="bg-green-100 text-green-800">
+                            <tr>
+                                <th class="border-b-2 border-green-200 px-2 py-2 text-left w-4/12">Sensor</th>
+                                <th class="border-b-2 border-green-200 px-2 py-2 text-center w-3/12">Valor</th>
+                                <th class="border-b-2 border-green-200 px-2 py-2 text-left w-5/12">Fecha y Hora</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            <tr class="hover:bg-green-50 transition duration-100">
+                                <td class="border-b border-gray-100 px-2 py-1 flex items-center">
+                                    <span class="sensor-point" style="background-color:#10b981;"></span>
+                                    Sensor1
+                                </td>
+                                <td class="border-b border-gray-100 px-2 py-1 font-semibold text-center">26.06</td>
+                                <td class="border-b border-gray-100 px-2 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
+                            </tr>
+                            <tr class="hover:bg-green-50 transition duration-100">
+                                <td class="border-b border-gray-100 px-2 py-1 flex items-center">
+                                    <span class="sensor-point" style="background-color:#3b82f6;"></span>
+                                    Sensor2
+                                </td>
+                                <td class="border-b border-gray-100 px-2 py-1 font-semibold text-center">26.69</td>
+                                <td class="border-b border-gray-100 px-2 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
+                            </tr>
+                            <tr class="hover:bg-green-50 transition duration-100">
+                                <td class="border-b border-gray-100 px-2 py-1 flex items-center">
+                                    <span class="sensor-point" style="background-color:#f97316;"></span>
+                                    Sensor3
+                                </td>
+                                <td class="border-b border-gray-100 px-2 py-1 font-semibold text-center">27.81</td>
+                                <td class="border-b border-gray-100 px-2 py-1 text-gray-500 text-xs">2025-08-26 10:05:01</td>
+                            </tr>
                         </tbody>
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
