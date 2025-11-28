@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const timestamps = datosOrdenCronologico.map(d => d.timestamp);
         const valores = datosOrdenCronologico.map(d => parseFloat(d.valor));
-
+    
         if (chart) chart.destroy();
 
         chart = new Chart(chartCanvas, {
@@ -270,15 +270,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const row = document.createElement("tr");
                 row.classList.add('hover:bg-green-50', 'transition', 'duration-100');
 
-            row.innerHTML = `
-                <td class="border-b border-gray-100 px-4 py-1 flex items-center">
-                    <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorSensor}; margin-right:10px;"></span>
-                    ${sensor.sensor}
-                </td>
-                <td class="border-b border-gray-100 px-4 py-1 font-semibold">${ultimo.valor ?? "--"}</td>
-                <td class="border-b border-gray-100 px-4 py-1 text-gray-500 text-xs">${ultimo.timestamp ?? "--"}</td>
-            `;
-
+                row.innerHTML = `
+                    <td class="border-b border-gray-100 px-2 py-1 flex items-center">
+                        <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${colorSensor}; margin-right:10px;"></span>
+                        ${sensor.sensor}
+                    </td>
+                    <td class="border-b border-gray-100 px-2 py-1 font-semibold text-center">${ultimo.valor ?? "--"}</td>
+                    <td class="border-b border-gray-100 px-2 py-1 text-gray-500 text-xs text-left">${ultimo.timestamp ?? "--"}</td>
+                `;
 
                 tbody.appendChild(row);
             }
