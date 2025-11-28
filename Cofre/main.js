@@ -1,4 +1,4 @@
-// main.js
+// main.js - Código Completo y Corregido
 
 // Definición de colores para cada sensor (usados en gráficas y resumen)
 const COLORES_SENSORES = [
@@ -13,7 +13,7 @@ const COLORES_SENSORES = [
 ];
 
 // ***************************************
-// FUNCIÓN PARA ABRIR LA HOJA DE CÁLCULO (Se hace global para el botón en HTML)
+// FUNCIÓN PARA ABRIR LA HOJA DE CÁLCULO
 // ***************************************
 window.openGoogleSheet = function() {
     // ID de tu Google Sheet (tomado de tu main.py)
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const selectedSensor = sensorSelect.value || "Sensor1";
             updateSensor(selectedSensor);
         } else if (sectionId === "historyPanel") {
-            initComparativa();
+            initComparativa(); // Inicializa la gráfica de Comparativa
         }
 
         if (sideMenu) sideMenu.classList.add("hidden");
@@ -124,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const datosOrdenCronologico = [...data].reverse();
 
+        // **CORRECCIÓN DE TYPO** (Ya no es 'datosOrdenologico')
         const timestamps = datosOrdenCronologico.map(d => d.timestamp);
         const valores = datosOrdenCronologico.map(d => parseFloat(d.valor));
     
@@ -214,7 +215,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 tension: 0.3,
                 pointRadius: 2,
                 fill: false,
-                hidden: !(i === 0 || i === 7)
+                // **CORRECCIÓN:** Se elimina la propiedad 'hidden' o se cambia la lógica.
+                // Recomiendo eliminarla para que todos se muestren por defecto:
+                // hidden: !(i === 0 || i === 7) 
             }));
 
             if (compareChart) compareChart.destroy();
@@ -252,6 +255,9 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error en initComparativa:", err);
         }
     }
+    
+    // ... (El resto de la función initResumenPanel ya es correcta) ...
+    // Asegúrate de que los cambios de px-2 y py-1 siguen ahí:
 
     async function initResumenPanel() {
         const sensores = await fetchAllSensors();
@@ -282,7 +288,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 tbody.appendChild(row);
             }
         });
-
+        
+        // ... (resto de la función initResumenPanel) ...
+        
         // =======================================================
         // ACTUALIZACIÓN DE ESTADO DEL SISTEMA (ENERGÉTICO)
         // =======================================================
