@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let chart;
     let compareChart;
 
+    
     function showSection(sectionId) {
         const sections = ["resumenPanel", "mainPanel", "historyPanel"];
         sections.forEach(id => {
@@ -387,4 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSensorSelect();
     initResumenPanel();
     showSection("resumenPanel");
+    // Esto llama a initResumenPanel (que recarga todos los datos) cada 30 segundos.
+    setInterval(initResumenPanel, 30000); 
+ // <--- El "});" es el cierre del document.addEventListener("DOMContentLoaded"
 });
